@@ -17,6 +17,27 @@ module.exports = {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.ttf$/i,
+        type: 'asset/resource',
+        dependency: { not: ['url'] },
+      },
+      {
+        test: /\.svg$/i,
+        use: [
+          {
+            loader: 'svg-inline-loader'
+          }
+        ],
+      },
+      {
+        test: /\.jpg$/i,
+        type: 'asset/resource'
+      },
+      {
+        test: /\.png$/i,
+        loader: 'url-loader'
+      },
     ],
   },
 };
