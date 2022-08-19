@@ -293,6 +293,9 @@ function updateIdInDOM(){
     if(document.getElementById(`${index}`) == null){
       document.getElementById(`${index+1}`).id = `${index}`;
     }
+    else{
+      continue;
+    }
   }
 }
 
@@ -308,6 +311,6 @@ setInterval(()=>{
   else{
     return;
   }
-},300000);
+},3000);
 
-export { createTask, createTaskModalBox, addTask, displayTask,tabChecker ,tasks ,indexReturn };
+export { createTask, createTaskModalBox, addTask, displayTask,tabChecker ,tasks ,indexReturn,updateIdInDOM};
