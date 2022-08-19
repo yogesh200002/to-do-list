@@ -1,6 +1,8 @@
-import { createTaskModalBox,tasks } from "./task";
+import { createTaskModalBox,tasks,updateIdInDOM } from "./task";
 import { sidePaneEventListener } from "./home-today-UI";
 import { createEditTaskModalBox } from "./edit-modalBox";
+
+let tempProject;
 
 function createProjectModalBox(){
     const content = document.getElementById('content');
@@ -57,7 +59,26 @@ function addProjectInDOM(projectName){
   projectIcon.textContent = 'folder';
   const projectTitle = document.createElement('div');
   projectTitle.textContent = `${projectName}`;
-  projectConatiner.append(projectIcon, projectTitle);
+  if(projectName == 'inbox'){
+    projectConatiner.append(projectIcon, projectTitle);
+  }
+  else{
+    const projectDelete = document.createElement('span');
+    projectDelete.classList.add('material-symbols-outlined');
+    projectDelete.textContent = 'delete';
+    projectDelete.addEventListener('click', (e) => {
+      tempProject = e.target.parentElement.id;
+      e.stopPropagation();
+      if(document.getElementById('deleteProjectModalBoxContainer') == null){
+        deleteProjectModalBox();
+        document.getElementById("deleteProjectModalBoxContainer").style.display = "block";
+      }
+      else{
+        document.getElementById("deleteProjectModalBoxContainer").style.display = "block";
+      }
+    })
+    projectConatiner.append(projectIcon, projectTitle, projectDelete);
+  }
   createButton.before(projectConatiner);
   project.append(projectOption);
   editProject.append(projectOption.cloneNode(true));
@@ -134,6 +155,53 @@ function projectEventListener(){
       })
     })
   }
+}
+
+function deleteProjectTasksInArray(tasks, projectName){
+  tasks.forEach(task => {
+    if(task.project == projectName){
+      tasks.splice(tasks.indexOf(task), 1);
+    }
+    else{
+      return;
+    }
+  })
+}
+
+function deleteProjectModalBox(){
+  const deleteProjectModalBoxContainer = document.createElement('div');
+  deleteProjectModalBoxContainer.id = 'deleteProjectModalBoxContainer';
+  const deleteProjectModalBox = document.createElement('div');
+  deleteProjectModalBox.id = 'deleteProjectModalBox';
+  const deleteProjectTitle = document.createElement('div');
+  deleteProjectTitle.textContent = 'Are you sure you want to Delete this project folder which also deletes all the tasks in it?';
+  const deleteProjectYes = document.createElement('button');
+  deleteProjectYes.textContent = 'Yes';
+  deleteProjectYes.addEventListener('click', () => {
+    const projectTasks = document.querySelectorAll(`.${tempProject}`);
+      deleteProjectTasksInArray(tasks, tempProject);
+      projectTasks.forEach(task => {
+        task.remove();
+        updateIdInDOM();
+      })
+      const projectTab = document.getElementById(`${tempProject}Tab`);
+      projectTab.remove();
+      const sidePaneProject = document.getElementById(`${tempProject}`);
+      sidePaneProject.remove();
+      const optionProject = document.querySelectorAll(`option[value=${tempProject}]`);
+      optionProject.forEach(option => {
+        option.remove();
+      })
+      deleteProjectModalBoxContainer.style.display = 'none';
+  })
+  const deleteProjectNo = document.createElement('button');
+  deleteProjectNo.textContent = 'No';
+  deleteProjectNo.addEventListener('click', () => {
+    deleteProjectModalBoxContainer.style.display = 'none';
+  })
+  deleteProjectModalBox.append(deleteProjectTitle, deleteProjectYes, deleteProjectNo);
+  deleteProjectModalBoxContainer.append(deleteProjectModalBox);
+  document.getElementById('content').append(deleteProjectModalBoxContainer);
 }
 
 export {createProjectModalBox,projectTab,projectTabTasks,projectEventListener}
