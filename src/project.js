@@ -174,7 +174,7 @@ function deleteProjectModalBox(){
   const deleteProjectModalBox = document.createElement('div');
   deleteProjectModalBox.id = 'deleteProjectModalBox';
   const deleteProjectTitle = document.createElement('div');
-  deleteProjectTitle.textContent = 'Are you sure you want to Delete this project folder which also deletes all the tasks in it?';
+  deleteProjectTitle.textContent = `Are you sure you want to Delete ${tempProject} folder which also deletes all the tasks in it?`;
   const deleteProjectYes = document.createElement('button');
   deleteProjectYes.textContent = 'Yes';
   deleteProjectYes.addEventListener('click', () => {
