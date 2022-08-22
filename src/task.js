@@ -1,4 +1,4 @@
-import {isAfter,isEqual,parseISO} from 'date-fns'
+import {isBefore,isAfter,isEqual,parseISO,addDays,addMonths,addYears} from 'date-fns'
 import { createEditTaskModalBox, editInputFill } from './edit-modalBox';
 
 let tasks = [];
@@ -192,7 +192,6 @@ function displayTask(index) {
     deleteTaskInArray(index);
     taskTile.remove();
     updateIdInDOM();
-    console.log(tasks);
   })
   taskEditIcon.addEventListener("click", (e) => {
     taskNode = e.target.parentNode.parentNode.id;
@@ -214,7 +213,7 @@ function displayTask(index) {
 }
 
 function dateChecker(taskDate,todayDate,taskDOM){
-  if(isAfter(parseISO(taskDate,1),parseISO(todayDate,1)) === false && isEqual(parseISO(taskDate,1),parseISO(todayDate)) === false){
+  if(isBefore(parseISO(taskDate,1),parseISO(todayDate,1)) === true && isEqual(parseISO(taskDate,1),parseISO(todayDate)) === false){
     taskDOM.classList.add('overDue')
     if(taskDOM.classList.contains('upcoming') == true || taskDOM.classList.contains('today') == true){
       taskDOM.classList.remove('upcoming');
@@ -242,8 +241,8 @@ function dateChecker(taskDate,todayDate,taskDOM){
 
 function tabChecker(overDueSection, upcomingSection, todaySection,taskTile,index,todayDate,projectTabs) {
   if (document.querySelector('#todayTab').classList.contains('active') || document.querySelector('#upcomingTab').classList.contains('active')) {
-    if (dateChecker(tasks[index].date, todayDate, taskTile) == 'overdue') {
-      overDueSection.insertBefore(taskTile, overDueSection.childNodes[0]);
+    if (dateChecker(tasks[index].date, todayDate, taskTile) == 'overDue') {
+      overDueSection.insertBefore(taskTile, overDueSection.childNodes[0])
     }
     else if (dateChecker(tasks[index].date, todayDate, taskTile) == 'today') {
       todaySection.insertBefore(taskTile, todaySection.childNodes[0]);
@@ -278,12 +277,6 @@ function completedTaskChangeInDOM(checkbox){
   }
 }
 
-function deleteCompletedTasksInDOM(completedTasks){
-  completedTasks.forEach(task => {
-    task.remove();
-  })
-}
-
 function deleteTaskInArray(index){
   tasks.splice(index,1);
 }
@@ -299,18 +292,77 @@ function updateIdInDOM(){
   }
 }
 
+function occuranceChecker(index){
+  if(tasks[index].occurance == 'Only once'){
+    return false;
+  }
+  else if(tasks[index].occurance == 'Daily' || tasks[index].occurance == 'Weekly' || tasks[index].occurance == 'Monthly' || tasks[index].occurance == 'Yearly'){
+    return true;
+  }
+}
+
+function occuranceChangeInDOM(index){
+  if(occuranceChecker(index) == true){
+    let taskInDOM = document.getElementById(`${index}`)
+    let taskInArray = tasks[index];
+    if(taskInArray.occurance == 'Daily'){
+      occuranceChangeInArray(index,taskInArray.occurance);
+      taskInDOM.childNodes[1].childNodes[2].textContent = `${taskInArray.date}`;
+    }
+    else if(taskInArray.occurance == 'Weekly'){
+      occuranceChangeInArray(index,taskInArray.occurance);
+      taskInDOM.childNodes[1].childNodes[2].textContent = `${taskInArray.date}`;
+    }
+    else if(taskInArray.occurance == 'Monthly'){
+      occuranceChangeInArray(index,taskInArray.occurance);
+      taskInDOM.childNodes[1].childNodes[2].textContent = `${taskInArray.date}`;
+    }
+    else if(taskInArray.occurance == 'Yearly'){
+      occuranceChangeInArray(index,taskInArray.occurance);
+      taskInDOM.childNodes[1].childNodes[2].textContent = `${taskInArray.date}`;
+    }
+  }
+}
+
+function occuranceChangeInArray(index,occurance){
+  let taskInArray = tasks[index];
+  if(occurance == 'Daily'){
+    taskInArray.date = `${addDays(parseISO(taskInArray.date),1).toISOString().slice(0, 10) }`;
+  }
+  else if(occurance == 'Weekly'){
+    taskInArray.date = `${addDays(parseISO(taskInArray.date),7).toISOString().slice(0, 10) }`;
+  }
+  else if(occurance == 'Monthly'){
+    taskInArray.date = `${addMonths(parseISO(taskInArray.date),1).toISOString().slice(0, 10) }`;
+  }
+  else if(occurance == 'Yearly'){
+    taskInArray.date = `${addYears(parseISO(taskInArray.date),1).toISOString().slice(0, 10) }`;
+  }
+}
+
 setInterval(()=>{
   const completedTasks = document.querySelectorAll('.completed')
-  if(completedTasks.length > 0){
-    [...completedTasks].forEach(task => {
-      deleteTaskInArray(task.id);
-    })
-    deleteCompletedTasksInDOM(completedTasks);
-    updateIdInDOM();
-  }
-  else{
-    return;
-  }
+  completedTasks.forEach(task => {
+    if(occuranceChecker(task.id) == false){
+        deleteTaskInArray(task.id);
+        task.remove();
+        updateIdInDOM();
+      }
+    else if(occuranceChecker(task.id) == true){
+      let todayDate = new Date().toISOString().slice(0, 10)
+      document.getElementById(`${task.id}`).childNodes[0].checked = false;
+      document.getElementById(`${task.id}`).style.textDecorationLine = 'none'; 
+      document.getElementById(`${task.id}`).classList.remove('completed');
+      occuranceChangeInArray(task.id);
+      occuranceChangeInDOM(task.id);
+      dateChecker(tasks[task.id].date, todayDate, document.getElementById(`${task.id}`));
+      tabChecker(document.getElementById("overDueSection"), document.getElementById('upcomingSection'), document.getElementById("todaySection"), document.getElementById(`${task.id}`), task.id, todayDate, document.getElementById('sidePane').childNodes);
+      updateIdInDOM();
+    }
+    else{
+      return;
+    }
+  })
 },3000);
 
 export { createTask, createTaskModalBox, addTask, displayTask,tabChecker ,tasks ,indexReturn,updateIdInDOM};
