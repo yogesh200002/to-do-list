@@ -1,4 +1,4 @@
-import {tasks,indexReturn,tabChecker} from './task';
+import {tasks,indexReturn,tabChecker,saveStorage} from './task';
 
 function createEditTaskModalBox() {
   const content = document.querySelector("#content");
@@ -82,9 +82,10 @@ function createEditTaskModalBox() {
     const overDueSection = document.getElementById("overDueSection");
     const upcomingSection = document.getElementById('upcomingSection');
     const projectTabs = document.getElementById('sidePane').childNodes;
+    const taskTile = document.getElementById(`${indexReturn()}`);
     editTaskInDom(indexReturn());
     editTaskInArray(tasks, indexReturn());
-    const taskTile = document.getElementById(`${indexReturn()}`);
+    saveStorage()
     let todayDate = new Date().toISOString().slice(0, 10);
     tabChecker(overDueSection, upcomingSection, todaySection,taskTile,indexReturn(),todayDate,projectTabs);
     modalBoxContainer.style.display = "none";
@@ -118,13 +119,14 @@ function createEditTaskModalBox() {
 }
 
 function editTaskInArray(array,index){
+  document.getElementById(`${index}`).classList.remove(`${array[index].project}`)
   array[index].taskName = document.getElementById("editTaskNameBox").value;
   array[index].description = document.getElementById("editDescriptionBox").value;
   array[index].date = document.getElementById("editDateInput").value;
   array[index].project = document.getElementById('editProject').value;
   array[index].priority = document.getElementById("editPriority").value;
   array[index].occurance = document.getElementById("editOccurance").value;
-  console.log(array);
+  document.getElementById(`${index}`).classList.add(`${array[index].project}`)
 }
 
 function editInputFill(index){
