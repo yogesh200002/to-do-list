@@ -1,8 +1,30 @@
 import {isBefore,isAfter,isEqual,parseISO,addDays,addMonths,addYears} from 'date-fns'
 import { createEditTaskModalBox, editInputFill } from './edit-modalBox';
+import { addProjectInDOM,projectTab } from './project'
 
-let tasks = [];
+let tasks;
 let taskNode;
+
+setTimeout(()=> {
+  if(localStorage.getItem('taskArray') === null){
+    tasks = [];
+  }
+  else{
+    tasks = JSON.parse(localStorage.getItem('taskArray'))
+    for (let index = 0; index < tasks.length; index++) {
+      if(tasks[index].project != 'inbox' && document.getElementById(`${tasks[index].project}`) == null){
+        addProjectInDOM(tasks[index].project)
+        projectTab(tasks[index].project)
+      }
+      displayTask(index)            
+    }
+  }
+},100)
+
+
+function saveStorage(){
+  localStorage.setItem('taskArray',JSON.stringify(tasks))
+}
 
 function createTask(taskName, description, date, project, occurance, priority) {
   return { taskName, description, date, project, occurance, priority };
@@ -92,6 +114,7 @@ function createTaskModalBox() {
   createButton.addEventListener("click", () => {
     addTask();
     displayTask(tasks.length-1);
+    saveStorage()
     taskNameBox.value = ''
     descriptionBox.value = ''
     modalBoxContainer.style.display = "none";
@@ -192,6 +215,7 @@ function displayTask(index) {
     deleteTaskInArray(index);
     taskTile.remove();
     updateIdInDOM();
+    saveStorage()
   })
   taskEditIcon.addEventListener("click", (e) => {
     taskNode = e.target.parentNode.parentNode.id;
@@ -199,6 +223,7 @@ function displayTask(index) {
       createEditTaskModalBox(taskNode);
       editInputFill(taskNode);
       document.getElementById("editModalBoxContainer").style.display = "block";
+      saveStorage()
     }
     else{
       editInputFill(taskNode);
@@ -282,13 +307,18 @@ function deleteTaskInArray(index){
 }
 
 function updateIdInDOM(){
-  for (let index = 0; index < tasks.length; index++) {
-    if(document.getElementById(`${index}`) == null){
-      document.getElementById(`${index+1}`).id = `${index}`;
+  if(tasks.length == 0){
+    for (let index = 0; index < tasks.length; index++) {
+      if(document.getElementById(`${index}`) == null){
+        document.getElementById(`${index+1}`).id = `${index}`;
+      }
+      else{
+        continue;
+      }
     }
-    else{
-      continue;
-    }
+  }
+  else{
+    return;
   }
 }
 
@@ -327,7 +357,7 @@ function occuranceChangeInDOM(index){
 function occuranceChangeInArray(index,occurance){
   let taskInArray = tasks[index];
   if(occurance == 'Daily'){
-    taskInArray.date = `${addDays(parseISO(taskInArray.date),1).toISOString().slice(0, 10) }`;
+    taskInArray.date = `${addDays(parseISO(taskInArray.date),2).toISOString().slice(0, 10)  }`;
   }
   else if(occurance == 'Weekly'){
     taskInArray.date = `${addDays(parseISO(taskInArray.date),7).toISOString().slice(0, 10) }`;
@@ -347,6 +377,7 @@ setInterval(()=>{
         deleteTaskInArray(task.id);
         task.remove();
         updateIdInDOM();
+        saveStorage()
       }
     else if(occuranceChecker(task.id) == true){
       let todayDate = new Date().toISOString().slice(0, 10)
@@ -358,6 +389,7 @@ setInterval(()=>{
       dateChecker(tasks[task.id].date, todayDate, document.getElementById(`${task.id}`));
       tabChecker(document.getElementById("overDueSection"), document.getElementById('upcomingSection'), document.getElementById("todaySection"), document.getElementById(`${task.id}`), task.id, todayDate, document.getElementById('sidePane').childNodes);
       updateIdInDOM();
+      saveStorage()
     }
     else{
       return;
@@ -365,4 +397,4 @@ setInterval(()=>{
   })
 },3000);
 
-export { createTask, createTaskModalBox, addTask, displayTask,tabChecker ,tasks ,indexReturn,updateIdInDOM};
+export { createTask, createTaskModalBox, addTask, displayTask,tabChecker ,tasks ,indexReturn,updateIdInDOM,saveStorage};
