@@ -1,6 +1,7 @@
 import { createTaskModalBox,tasks,updateIdInDOM } from "./task";
 import { sidePaneEventListener } from "./home-today-UI";
 import { createEditTaskModalBox } from "./edit-modalBox";
+import {saveStorage} from './task'
 
 let tempProject;
 
@@ -157,15 +158,9 @@ function projectEventListener(){
   }
 }
 
+
 function deleteProjectTasksInArray(tasks, projectName){
-  tasks.forEach(task => {
-    if(task.project == projectName){
-      tasks.splice(tasks.indexOf(task), 1);
-    }
-    else{
-      return;
-    }
-  })
+  tasks.filter(task => task.project == projectName).forEach(task => tasks.splice(tasks.indexOf(task), 1))
 }
 
 function deleteProjectModalBox(){
@@ -180,6 +175,7 @@ function deleteProjectModalBox(){
   deleteProjectYes.addEventListener('click', () => {
     const projectTasks = document.querySelectorAll(`.${tempProject}`);
       deleteProjectTasksInArray(tasks, tempProject);
+      saveStorage();
       projectTasks.forEach(task => {
         task.remove();
         updateIdInDOM();
@@ -204,4 +200,4 @@ function deleteProjectModalBox(){
   document.getElementById('content').append(deleteProjectModalBoxContainer);
 }
 
-export {createProjectModalBox,projectTab,projectTabTasks,projectEventListener}
+export {createProjectModalBox,addProjectInDOM,projectTab,projectTabTasks,projectEventListener}
