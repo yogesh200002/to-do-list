@@ -8,6 +8,7 @@ homeCreation.mainCreation();
 homeCreation.sidePaneCreation();
 homeCreation.todayTabCreation();
 homeCreation.sidePaneEventListener();
+homeCreation.footerCreation();
 upcomingTabCreation();
 projectTab('inbox');
 document.getElementById('upcomingTab').style.display = 'none'
