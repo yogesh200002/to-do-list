@@ -5,6 +5,16 @@
 
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0%;
+  }
+  
+#content {
+  height: 100%;
+}
+
 #content{
     display: flex;
 }
@@ -36,7 +46,7 @@
     flex-direction: column;
     gap: 10px;
     border-right: 2px solid black;
-    width: 300px;
+    min-width: 300px;
 }
 
 #sidePane > div{
@@ -64,7 +74,7 @@
     margin: auto;
     padding: 20px;
     border: 2px solid #888;
-    width: 80%;
+    width: 50%;
 }
 
 #projectModalBox{
@@ -86,4 +96,34 @@
     display: flex;
     flex-direction: row;
     gap: 30px;
+}
+
+footer{
+    justify-content: center;
+    display: flex;
+    font-size: x-large;
+    font-weight: bold;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: bisque;
+}
+
+#descriptionBox,#editDescriptionBox{
+    height: 100px;
+    width: 250px;
+}
+
+.optionsContainer{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.buttonContainer{
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    align-items: center;
 }
