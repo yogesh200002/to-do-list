@@ -13,11 +13,10 @@ function createEditTaskModalBox() {
   taskNameBox.setAttribute("id", "editTaskNameBox");
   const description = document.createElement("div");
   description.textContent = "Description";
-  const descriptionBox = document.createElement("input");
-  descriptionBox.setAttribute("type", "text");
+  const descriptionBox = document.createElement("textarea");
   descriptionBox.setAttribute("id", "editDescriptionBox");
   const optionsContainer = document.createElement("div");
-  optionsContainer.id = "optionsContainer";
+  optionsContainer.classList.add("optionsContainer");
   const dateLabel = document.createElement("label");
   dateLabel.textContent = "Date";
   const dateInput = document.createElement("input");
@@ -74,7 +73,7 @@ function createEditTaskModalBox() {
   priorityOption3.textContent = "High";
   priorityInput.append(priorityOption1, priorityOption2, priorityOption3);
   const ButtonContainer = document.createElement("div");
-  ButtonContainer.id = "buttonContainer";
+  ButtonContainer.classList.add("buttonContainer");
   const createButton = document.createElement("button");
   createButton.textContent = "Edit Task";
   createButton.addEventListener("click", () => {
