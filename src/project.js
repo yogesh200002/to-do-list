@@ -92,9 +92,17 @@ function projectTab(projectName){
   const projectTab = document.createElement("div");
   projectTab.id = `${projectName}Tab`;
   projectTab.style.display = "none";
+  projectTab.style.flexDirection = 'column';
+  projectTab.style.padding = '10px';
+  projectTab.style.flexGrow = '1';
   const projectTabHeader = document.createElement("div");
   projectTabHeader.id = `${projectName}TabHeader`;
+  projectTabHeader.style.display = 'flex'
+  projectTabHeader.style.justifyContent = 'space-between'
   const projectTabHeading = document.createElement("h1");
+  projectTabHeading.style.display = 'flex';
+  projectTabHeading.style.margin = '0';
+  projectTabHeading.style.alignItems = 'baseline';
   projectTabHeading.textContent = `${projectName.charAt(0).toUpperCase() + projectName.slice(1)}`;
   const profileIcon = document.createElement("span");
   profileIcon.setAttribute("class", "material-symbols-outlined");
