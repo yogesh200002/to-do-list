@@ -43,11 +43,10 @@ function createTaskModalBox() {
   taskNameBox.setAttribute("id", "taskNameBox");
   const description = document.createElement("div");
   description.textContent = "Description";
-  const descriptionBox = document.createElement("input");
-  descriptionBox.setAttribute("type", "text");
+  const descriptionBox = document.createElement("textarea");
   descriptionBox.setAttribute("id", "descriptionBox");
   const optionsContainer = document.createElement("div");
-  optionsContainer.id = "optionsContainer";
+  optionsContainer.classList.add("optionsContainer");
   const dateLabel = document.createElement("label");
   dateLabel.setAttribute("for", "date");
   dateLabel.textContent = "Date";
@@ -108,7 +107,7 @@ function createTaskModalBox() {
   priorityOption3.textContent = "High";
   priorityInput.append(priorityOption1, priorityOption2, priorityOption3);
   const ButtonContainer = document.createElement("div");
-  ButtonContainer.id = "buttonContainer";
+  ButtonContainer.classList.add("buttonContainer");
   const createButton = document.createElement("button");
   createButton.textContent = "Create";
   createButton.addEventListener("click", () => {
@@ -180,6 +179,12 @@ function displayTask(index) {
   taskSection.classList.add("taskSection");
   const taskTile = document.createElement("div");
   taskTile.id = `${index}`;
+  taskTile.style.display = 'flex';
+  taskTile.style.flexdirection = 'row';
+  taskTile.style.gap = '10px';
+  taskTile.style.justifyContent = 'space-between';
+  taskTile.style.alignItems = 'center';
+  taskTile.style.width = '50%'
   taskTile.classList.add(`${tasks[index].project}`);
   const taskCheck = document.createElement("input");
   taskCheck.setAttribute("type", "checkbox");
@@ -196,6 +201,10 @@ function displayTask(index) {
   const taskName = document.createElement("div");
   taskName.textContent = `${tasks[index].taskName}`;
   const description = document.createElement("div");
+  description.style.display = '-webkit-box';
+  description.style.webkitLineClamp = '2';
+  description.style.webkitBoxOrient = 'vertical';
+  description.style.overflow = 'hidden';
   description.textContent = `${tasks[index].description}`;
   const taskDate = document.createElement("div");
   taskDate.textContent = `${tasks[index].date}`;
