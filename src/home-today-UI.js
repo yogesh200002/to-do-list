@@ -152,8 +152,13 @@ function sidePaneEventListener(){
                       }
                   }
                   else{
-                      contentTabs[i].style.display = 'none'
-                      contentTabs[i].classList.remove('active')
+                      if(contentTabs[i].localName == 'footer'){
+                        contentTabs[i].style.display = 'flex'
+                      }
+                      else{
+                        contentTabs[i].style.display = 'none'
+                        contentTabs[i].classList.remove('active')
+                      }
                   }
               }
           })
@@ -183,4 +188,11 @@ function dayFilter(pending){
   }
 }
 
-export { mainCreation, sidePaneCreation, todayTabCreation,sidePaneEventListener};
+function footerCreation(){
+  const content = document.querySelector('#content')
+  const footer = document.createElement('footer')
+  footer.textContent = 'Made with Love by Yogesh :)'
+  content.append(footer)
+}
+
+export { mainCreation, sidePaneCreation,footerCreation, todayTabCreation,sidePaneEventListener};
