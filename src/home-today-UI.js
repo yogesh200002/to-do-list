@@ -1,4 +1,5 @@
 import { createTaskModalBox } from "./task";
+import { sideTabChecker } from './project'
 
 function mainCreation() {
   const body = document.querySelector("body");
@@ -9,8 +10,9 @@ function mainCreation() {
 
 function sidePaneCreation() {
   const content = document.querySelector("#content");
-  const sidePane = document.createElement("div");
+  const sidePane = document.createElement("nav");
   sidePane.id = "sidePane";
+  sidePane.style.display = 'flex'
   const dashboardContainer = document.createElement("div");
   dashboardContainer.id = "dashboard";
   const dashboard = document.createElement("div");
@@ -26,6 +28,7 @@ function sidePaneCreation() {
   const todayIcon = document.createElement("span");
   todayIcon.setAttribute("class", "material-symbols-outlined");
   todayIcon.textContent = "today";
+  todayContainer.style.backgroundColor = '#95ED8D'
   todayContainer.append(todayIcon, today);
   const upcomingContainer = document.createElement("div");
   upcomingContainer.id = "upcoming";
@@ -139,7 +142,8 @@ function sidePaneEventListener(){
   const contentTabs = document.getElementById('content').childNodes
   for (let index = 1; index < sidePaneTabs.length; index++) {
       if(sidePaneTabs[index].id !== 'createProject' && sidePaneTabs[index].id !== 'dashboard' && sidePaneTabs[index].id !== 'projects'){
-          sidePaneTabs[index].addEventListener('click', () => {
+          sidePaneTabs[index].addEventListener('click', (e) => {
+            sideTabChecker(e.target.id)
               for(let i=1; i < contentTabs.length; i++){
                   if(contentTabs[i].id == `${sidePaneTabs[index].id}Tab`){
                       contentTabs[i].style.display = 'flex'
