@@ -184,7 +184,13 @@ function displayTask(index) {
   taskTile.style.gap = '10px';
   taskTile.style.justifyContent = 'space-between';
   taskTile.style.alignItems = 'center';
-  taskTile.style.width = '50%'
+  taskTile.style.width = '60%'
+  taskTile.style.borderTop = '1px solid black'
+  taskTile.style.borderBottom = '1px solid black'
+  taskTile.style.backgroundColor = '#D9D9D9'
+  taskTile.style.paddingLeft = '20px'
+  taskTile.style.paddingRight = '20px'
+  taskTile.style.minWidth = '730px'
   taskTile.classList.add(`${tasks[index].project}`);
   const taskCheck = document.createElement("input");
   taskCheck.setAttribute("type", "checkbox");
@@ -201,9 +207,8 @@ function displayTask(index) {
   const taskName = document.createElement("div");
   taskName.textContent = `${tasks[index].taskName}`;
   const description = document.createElement("div");
-  description.style.display = '-webkit-box';
-  description.style.webkitLineClamp = '2';
-  description.style.webkitBoxOrient = 'vertical';
+  description.style.whiteSpace = 'nowrap'
+  description.style.textOverflow = 'ellipsis'
   description.style.overflow = 'hidden';
   description.textContent = `${tasks[index].description}`;
   const taskDate = document.createElement("div");
@@ -239,6 +244,7 @@ function displayTask(index) {
       document.getElementById("editModalBoxContainer").style.display = "block";
     }
   });
+  taskSection.style.width = '30%'
   taskOptions.append(taskEditIcon,taskDeleteIcon,project, priority);
   taskSection.append(taskName, description, taskDate);
   taskTile.append(taskCheck,taskSection, taskOptions);
@@ -316,7 +322,7 @@ function deleteTaskInArray(index){
 }
 
 function updateIdInDOM(){
-  if(tasks.length == 0){
+  if(tasks.length != 0){
     for (let index = 0; index < tasks.length; index++) {
       if(document.getElementById(`${index}`) == null){
         document.getElementById(`${index+1}`).id = `${index}`;
