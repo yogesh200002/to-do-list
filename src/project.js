@@ -102,6 +102,7 @@ function projectTab(projectName){
   const projectTabHeading = document.createElement("h1");
   projectTabHeading.style.display = 'flex';
   projectTabHeading.style.margin = '0';
+  projectTabHeading.style.marginBottom = '15px'
   projectTabHeading.style.alignItems = 'baseline';
   projectTabHeading.textContent = `${projectName.charAt(0).toUpperCase() + projectName.slice(1)}`;
   const profileIcon = document.createElement("span");
@@ -148,7 +149,8 @@ function projectEventListener(){
   const projectList = document.getElementById('sidePane').childNodes
   const contentChild = document.getElementById('content').childNodes
   for (let index = 4; index < projectList.length-1; index++) {
-    projectList[index].addEventListener('click', () => {
+    projectList[index].addEventListener('click', (e) => {
+      sideTabChecker(e.target.id)
       for(let i = 1; i < contentChild.length; i++){
         if(contentChild[i].id == `${projectList[index].id}Tab`){
           contentChild[i].style.display = 'flex';
@@ -166,6 +168,22 @@ function projectEventListener(){
   }
 }
 
+function sideTabChecker(tab){
+  const sidePaneTabs = document.getElementById('sidePane').childNodes
+  for (let index = 0; index < sidePaneTabs.length; index++) {
+    if(sidePaneTabs[index].id == tab){
+      sidePaneTabs[index].style.backgroundColor = '#95ED8D'
+    }
+    else{
+      if(sidePaneTabs[index].id == 'createProject' || sidePaneTabs[index].id == 'dashboard' || sidePaneTabs[index].id == 'projects'){
+        sidePaneTabs[index].style.backgroundColor = 'white'
+      }
+      else{
+        sidePaneTabs[index].style.backgroundColor = '#D9D9D9'
+      }
+    }
+  }
+}
 
 function deleteProjectTasksInArray(tasks, projectName){
   tasks.filter(task => task.project == projectName).forEach(task => tasks.splice(tasks.indexOf(task), 1))
@@ -208,4 +226,4 @@ function deleteProjectModalBox(){
   document.getElementById('content').append(deleteProjectModalBoxContainer);
 }
 
-export {createProjectModalBox,addProjectInDOM,projectTab,projectTabTasks,projectEventListener}
+export {createProjectModalBox,addProjectInDOM,projectTab,projectTabTasks,projectEventListener,sideTabChecker}
