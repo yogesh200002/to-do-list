@@ -6,13 +6,17 @@ function createEditTaskModalBox() {
   modalBoxContainer.id = "editModalBoxContainer";
   const modalBox = document.createElement("div");
   modalBox.id = "editModalBox";
+  const form = document.createElement('form')
   const taskName = document.createElement("div");
   taskName.textContent = "Task Name";
   const taskNameBox = document.createElement("input");
   taskNameBox.setAttribute("type", "text");
   taskNameBox.setAttribute("id", "editTaskNameBox");
+  taskNameBox.setAttribute('required','')
+  taskNameBox.setAttribute('placeholder','Give a title to your task')
   const description = document.createElement("div");
   description.textContent = "Description";
+  description.setAttribute('placeholder','optional')
   const descriptionBox = document.createElement("textarea");
   descriptionBox.setAttribute("id", "editDescriptionBox");
   const optionsContainer = document.createElement("div");
@@ -21,6 +25,7 @@ function createEditTaskModalBox() {
   dateLabel.textContent = "Date";
   const dateInput = document.createElement("input");
   dateInput.setAttribute("type", "date");
+  dateInput.setAttribute('required','')
   let today = new Date().toISOString().slice(0, 10);
   dateInput.setAttribute("min", `${today}`);
   dateInput.id = "editDateInput";
@@ -76,29 +81,36 @@ function createEditTaskModalBox() {
   ButtonContainer.classList.add("buttonContainer");
   const createButton = document.createElement("button");
   createButton.textContent = "Edit Task";
+  createButton.setAttribute('type','button')
   createButton.addEventListener("click", () => {
     const todaySection = document.getElementById("todaySection");
     const overDueSection = document.getElementById("overDueSection");
     const upcomingSection = document.getElementById("upcomingSection");
     const projectTabs = document.getElementById("sidePane").childNodes;
     const taskTile = document.getElementById(`${indexReturn()}`);
-    editTaskInDom(indexReturn());
-    editTaskInArray(tasks, indexReturn());
-    saveStorage();
-    let todayDate = new Date().toISOString().slice(0, 10);
-    tabChecker(
-      overDueSection,
-      upcomingSection,
-      todaySection,
-      taskTile,
-      indexReturn(),
-      todayDate,
-      projectTabs
-    );
-    modalBoxContainer.style.display = "none";
+    if(form.checkValidity() == false){
+      form.reportValidity()
+    }
+    else{
+      editTaskInDom(indexReturn());
+      editTaskInArray(tasks, indexReturn());
+      saveStorage();
+      let todayDate = new Date().toISOString().slice(0, 10);
+      tabChecker(
+        overDueSection,
+        upcomingSection,
+        todaySection,
+        taskTile,
+        indexReturn(),
+        todayDate,
+        projectTabs
+      );
+      modalBoxContainer.style.display = "none";
+    }
   });
   const cancelButton = document.createElement("button");
   cancelButton.textContent = "Cancel";
+  cancelButton.setAttribute('type','button')
   cancelButton.addEventListener("click", () => {
     modalBoxContainer.style.display = "none";
   });
@@ -113,7 +125,7 @@ function createEditTaskModalBox() {
     priorityLabel,
     priorityInput
   );
-  modalBox.append(
+  form.append(
     taskName,
     taskNameBox,
     description,
@@ -121,6 +133,7 @@ function createEditTaskModalBox() {
     optionsContainer,
     ButtonContainer
   );
+  modalBox.append(form)
   modalBoxContainer.append(modalBox);
   content.append(modalBoxContainer);
 }

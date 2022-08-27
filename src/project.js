@@ -11,31 +11,41 @@ function createProjectModalBox() {
   projectModalBoxContainer.id = "projectModalBoxContainer";
   const projectModalBox = document.createElement("div");
   projectModalBox.id = "projectModalBox";
+  const form = document.createElement('form')
   const projectTitle = document.createElement("div");
   projectTitle.textContent = "Create a new project";
   const projectInput = document.createElement("input");
   projectInput.id = "projectInput";
   projectInput.setAttribute("type", "text");
+  projectInput.setAttribute('required','')
   projectInput.setAttribute("placeholder", "Project Name");
   const projectButtonContainer = document.createElement("div");
   projectButtonContainer.id = "buttonContainer";
   const createButton = document.createElement("button");
   createButton.textContent = "Create";
   createButton.id = "createProjectButton";
+  createButton.setAttribute('type','button')
   createButton.addEventListener("click", () => {
-    addProjectInDOM(projectInput.value);
-    projectTab(projectInput.value);
-    projectModalBoxContainer.style.display = "none";
-    projectInput.value = "";
+    if(form.checkValidity() == false){
+      form.reportValidity()
+    }
+    else{
+      addProjectInDOM(projectInput.value);
+      projectTab(projectInput.value);
+      projectModalBoxContainer.style.display = "none";
+      projectInput.value = "";
+    }
   });
   const cancelButton = document.createElement("button");
   cancelButton.textContent = "Cancel";
+  cancelButton.setAttribute('type','button')
   cancelButton.addEventListener("click", () => {
     projectModalBoxContainer.style.display = "none";
     projectInput.value = "";
   });
   projectButtonContainer.append(createButton, cancelButton);
-  projectModalBox.append(projectTitle, projectInput, projectButtonContainer);
+  form.append(projectTitle, projectInput, projectButtonContainer);
+  projectModalBox.append(form)
   projectModalBoxContainer.append(projectModalBox);
   content.append(projectModalBoxContainer);
 }

@@ -45,15 +45,21 @@ function createTaskModalBox() {
   modalBoxContainer.id = "modalBoxContainer";
   const modalBox = document.createElement("div");
   modalBox.id = "modalBox";
+  const form = document.createElement('form')
+  form.setAttribute('method','get')
+  form.setAttribute('action','fetch')
   const taskName = document.createElement("div");
   taskName.textContent = "Task Name";
   const taskNameBox = document.createElement("input");
   taskNameBox.setAttribute("type", "text");
   taskNameBox.setAttribute("id", "taskNameBox");
+  taskNameBox.setAttribute('placeholder','Give a title to your task')
+  taskNameBox.setAttribute('required','')
   const description = document.createElement("div");
   description.textContent = "Description";
   const descriptionBox = document.createElement("textarea");
   descriptionBox.setAttribute("id", "descriptionBox");
+  descriptionBox.setAttribute('placeholder','optional')
   const optionsContainer = document.createElement("div");
   optionsContainer.classList.add("optionsContainer");
   const dateLabel = document.createElement("label");
@@ -61,6 +67,7 @@ function createTaskModalBox() {
   dateLabel.textContent = "Date";
   const dateInput = document.createElement("input");
   dateInput.setAttribute("type", "date");
+  dateInput.setAttribute('required','')
   let today = new Date().toISOString().slice(0, 10);
   dateInput.setAttribute("min", `${today}`);
   dateInput.id = "dateInput";
@@ -119,16 +126,23 @@ function createTaskModalBox() {
   ButtonContainer.classList.add("buttonContainer");
   const createButton = document.createElement("button");
   createButton.textContent = "Create";
+  createButton.setAttribute('type','button')
   createButton.addEventListener("click", () => {
-    addTask();
-    displayTask(tasks.length - 1);
-    saveStorage();
-    taskNameBox.value = "";
-    descriptionBox.value = "";
-    modalBoxContainer.style.display = "none";
+    if(form.checkValidity() == false){
+      form.reportValidity()
+    }
+    else{
+      addTask();
+      displayTask(tasks.length - 1);
+      saveStorage();
+      taskNameBox.value = "";
+      descriptionBox.value = "";
+      modalBoxContainer.style.display = "none";
+    }
   });
   const cancelButton = document.createElement("button");
   cancelButton.textContent = "Cancel";
+  cancelButton.setAttribute('type','button')
   cancelButton.addEventListener("click", () => {
     taskNameBox.value = "";
     descriptionBox.value = "";
@@ -145,7 +159,7 @@ function createTaskModalBox() {
     priorityLabel,
     priorityInput
   );
-  modalBox.append(
+  form.append(
     taskName,
     taskNameBox,
     description,
@@ -153,6 +167,7 @@ function createTaskModalBox() {
     optionsContainer,
     ButtonContainer
   );
+  modalBox.append(form)
   modalBoxContainer.append(modalBox);
   content.append(modalBoxContainer);
 }
