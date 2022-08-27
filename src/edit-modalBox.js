@@ -1,4 +1,4 @@
-import {tasks,indexReturn,tabChecker,saveStorage} from './task';
+import { tasks, indexReturn, tabChecker, saveStorage } from "./task";
 
 function createEditTaskModalBox() {
   const content = document.querySelector("#content");
@@ -79,14 +79,22 @@ function createEditTaskModalBox() {
   createButton.addEventListener("click", () => {
     const todaySection = document.getElementById("todaySection");
     const overDueSection = document.getElementById("overDueSection");
-    const upcomingSection = document.getElementById('upcomingSection');
-    const projectTabs = document.getElementById('sidePane').childNodes;
+    const upcomingSection = document.getElementById("upcomingSection");
+    const projectTabs = document.getElementById("sidePane").childNodes;
     const taskTile = document.getElementById(`${indexReturn()}`);
     editTaskInDom(indexReturn());
     editTaskInArray(tasks, indexReturn());
-    saveStorage()
+    saveStorage();
     let todayDate = new Date().toISOString().slice(0, 10);
-    tabChecker(overDueSection, upcomingSection, todaySection,taskTile,indexReturn(),todayDate,projectTabs);
+    tabChecker(
+      overDueSection,
+      upcomingSection,
+      todaySection,
+      taskTile,
+      indexReturn(),
+      todayDate,
+      projectTabs
+    );
     modalBoxContainer.style.display = "none";
   });
   const cancelButton = document.createElement("button");
@@ -117,33 +125,42 @@ function createEditTaskModalBox() {
   content.append(modalBoxContainer);
 }
 
-function editTaskInArray(array,index){
-  document.getElementById(`${index}`).classList.remove(`${array[index].project}`)
+function editTaskInArray(array, index) {
+  document
+    .getElementById(`${index}`)
+    .classList.remove(`${array[index].project}`);
   array[index].taskName = document.getElementById("editTaskNameBox").value;
-  array[index].description = document.getElementById("editDescriptionBox").value;
+  array[index].description =
+    document.getElementById("editDescriptionBox").value;
   array[index].date = document.getElementById("editDateInput").value;
-  array[index].project = document.getElementById('editProject').value;
+  array[index].project = document.getElementById("editProject").value;
   array[index].priority = document.getElementById("editPriority").value;
   array[index].occurance = document.getElementById("editOccurance").value;
-  document.getElementById(`${index}`).classList.add(`${array[index].project}`)
+  document.getElementById(`${index}`).classList.add(`${array[index].project}`);
 }
 
-function editInputFill(index){
-  document.getElementById('editTaskNameBox').value = tasks[index].taskName;
-  document.getElementById('editDescriptionBox').value = tasks[index].description;
-  document.getElementById('editDateInput').value = tasks[index].date;
-  document.getElementById('editProject').value = tasks[index].project;
-  document.getElementById('editOccurance').value = tasks[index].occurance;
-  document.getElementById('editPriority').value = tasks[index].priority;
+function editInputFill(index) {
+  document.getElementById("editTaskNameBox").value = tasks[index].taskName;
+  document.getElementById("editDescriptionBox").value =
+    tasks[index].description;
+  document.getElementById("editDateInput").value = tasks[index].date;
+  document.getElementById("editProject").value = tasks[index].project;
+  document.getElementById("editOccurance").value = tasks[index].occurance;
+  document.getElementById("editPriority").value = tasks[index].priority;
 }
 
-function editTaskInDom(index){
+function editTaskInDom(index) {
   let task = document.getElementById(`${index}`);
-  task.childNodes[1].childNodes[0].textContent = document.getElementById("editTaskNameBox").value;
-  task.childNodes[1].childNodes[1].textContent = document.getElementById("editDescriptionBox").value;
-  task.childNodes[1].childNodes[2].textContent = document.getElementById("editDateInput").value;
-  task.childNodes[2].childNodes[2].textContent = document.getElementById('editProject').value;
-  task.childNodes[2].childNodes[3].textContent = document.getElementById("editPriority").value;
+  task.childNodes[1].childNodes[0].textContent =
+    document.getElementById("editTaskNameBox").value;
+  task.childNodes[1].childNodes[1].textContent =
+    document.getElementById("editDescriptionBox").value;
+  task.childNodes[1].childNodes[2].textContent =
+    document.getElementById("editDateInput").value;
+  task.childNodes[2].childNodes[2].textContent =
+    document.getElementById("editProject").value;
+  task.childNodes[2].childNodes[3].textContent =
+    document.getElementById("editPriority").value;
 }
 
-export { createEditTaskModalBox,editInputFill };
+export { createEditTaskModalBox, editInputFill };

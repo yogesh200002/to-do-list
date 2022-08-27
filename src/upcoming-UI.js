@@ -1,6 +1,6 @@
-import {createTaskModalBox} from './task.js'
+import { createTaskModalBox } from "./task.js";
 
-function upcomingTabCreation(){
+function upcomingTabCreation() {
   const content = document.querySelector("#content");
   const upcomingTab = document.createElement("div");
   upcomingTab.id = "upcomingTab";
@@ -24,12 +24,11 @@ function upcomingTabCreation(){
   addTaskbtn.textContent = "Add Task";
   upcomingSection.append(addTaskbtn);
   addTaskbtn.addEventListener("click", () => {
-    if(document.getElementById('modalBoxContainer') == null){
+    if (document.getElementById("modalBoxContainer") == null) {
       createTaskModalBox();
       document.getElementById("modalBoxContainer").style.display = "block";
-    }
-    else{
-    document.getElementById("modalBoxContainer").style.display = "block";
+    } else {
+      document.getElementById("modalBoxContainer").style.display = "block";
     }
   });
   window.addEventListener("click", (e) => {
@@ -41,4 +40,4 @@ function upcomingTabCreation(){
   content.append(upcomingTab);
 }
 
-export {upcomingTabCreation}
+export { upcomingTabCreation };
