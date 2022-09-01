@@ -32,6 +32,7 @@ setTimeout(() => {
         addProjectInDOM(tasks[index].project);
         projectTab(tasks[index].project);
       }
+      // eslint-disable-next-line no-use-before-define
       displayTask(index);
     }
   }

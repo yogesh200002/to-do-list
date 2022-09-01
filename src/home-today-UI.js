@@ -129,7 +129,7 @@ function todayTabCreation() {
     } else if (
       e.target === document.getElementById("projectModalBoxContainer")
     ) {
-      document.getElementById("projectModalBoxContainer").style.display =        "none";
+      document.getElementById("projectModalBoxContainer").style.display = "none";
     } else if (e.target === document.getElementById("editModalBoxContainer")) {
       document.getElementById("editModalBoxContainer").style.display = "none";
     }

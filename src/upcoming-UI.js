@@ -35,7 +35,7 @@ function upcomingTabCreation() {
     }
   });
   window.addEventListener("click", (e) => {
-    if (e.target == document.getElementById("modalBoxContainer")) {
+    if (e.target === document.getElementById("modalBoxContainer")) {
       document.getElementById("modalBoxContainer").style.display = "none";
     }
   });

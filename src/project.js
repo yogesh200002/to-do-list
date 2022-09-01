@@ -2,7 +2,9 @@
 /* eslint-disable no-shadow */
 /* eslint-disable import/no-cycle */
 /* eslint-disable quotes */
-import { createTaskModalBox, tasks, updateIdInDOM, saveStorage } from "./task";
+import {
+  createTaskModalBox, tasks, updateIdInDOM, saveStorage,
+} from "./task";
 import { sidePaneEventListener } from "./home-today-UI";
 import { createEditTaskModalBox } from "./edit-modalBox";
 
