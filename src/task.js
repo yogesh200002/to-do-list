@@ -172,7 +172,7 @@ function updateIdInDOM() {
       if (document.getElementById(`${index}`) == null) {
         document.getElementById(`${index + 1}`).id = `${index}`;
       } else {
-        return;
+        continue;
       }
     }
   }
