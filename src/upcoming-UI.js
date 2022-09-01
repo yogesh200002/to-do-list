@@ -1,4 +1,7 @@
-import { createTaskModalBox } from "./task.js";
+/* eslint-disable import/prefer-default-export */
+/* eslint-disable quotes */
+/* eslint-disable import/extensions */
+import { createTaskModalBox } from './task.js';
 
 function upcomingTabCreation() {
   const content = document.querySelector("#content");

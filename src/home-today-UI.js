@@ -1,4 +1,7 @@
-import { createTaskModalBox } from "./task";
+/* eslint-disable no-plusplus */
+/* eslint-disable import/no-cycle */
+/* eslint-disable quotes */
+import { createTaskModalBox } from './task';
 import { sideTabChecker } from "./project";
 
 function mainCreation() {
@@ -68,7 +71,7 @@ function sidePaneCreation() {
     upcomingContainer,
     projectsContainer,
     inboxContainer,
-    createProjectContainer
+    createProjectContainer,
   );
   content.append(sidePane);
 }
@@ -86,7 +89,7 @@ function todayTabCreation() {
   profileIcon.setAttribute("class", "material-symbols-outlined");
   profileIcon.textContent = "account_circle";
   const dateDisplay = document.createElement("div");
-  let date = Intl.DateTimeFormat(navigator.language, {
+  const date = Intl.DateTimeFormat(navigator.language, {
     weekday: "long",
     month: "short",
     day: "numeric",
@@ -121,14 +124,13 @@ function todayTabCreation() {
     }
   });
   window.addEventListener("click", (e) => {
-    if (e.target == document.getElementById("modalBoxContainer")) {
+    if (e.target === document.getElementById("modalBoxContainer")) {
       document.getElementById("modalBoxContainer").style.display = "none";
     } else if (
-      e.target == document.getElementById("projectModalBoxContainer")
+      e.target === document.getElementById("projectModalBoxContainer")
     ) {
-      document.getElementById("projectModalBoxContainer").style.display =
-        "none";
-    } else if (e.target == document.getElementById("editModalBoxContainer")) {
+      document.getElementById("projectModalBoxContainer").style.display =        "none";
+    } else if (e.target === document.getElementById("editModalBoxContainer")) {
       document.getElementById("editModalBoxContainer").style.display = "none";
     }
   });
@@ -137,63 +139,61 @@ function todayTabCreation() {
   content.append(todayTab);
 }
 
-function sidePaneEventListener() {
-  const sidePaneTabs = document.getElementById("sidePane").childNodes;
-  const contentTabs = document.getElementById("content").childNodes;
-  for (let index = 1; index < sidePaneTabs.length; index++) {
-    if (
-      sidePaneTabs[index].id !== "createProject" &&
-      sidePaneTabs[index].id !== "dashboard" &&
-      sidePaneTabs[index].id !== "projects"
-    ) {
-      sidePaneTabs[index].addEventListener("click", (e) => {
-        sideTabChecker(e.target.id);
-        for (let i = 1; i < contentTabs.length; i++) {
-          if (contentTabs[i].id == `${sidePaneTabs[index].id}Tab`) {
-            contentTabs[i].style.display = "flex";
-            contentTabs[i].classList.add("active");
-            if (contentTabs[i].id == "todayTab") {
-              dayFilter("today");
-            } else if (contentTabs[i].id == "upcomingTab") {
-              dayFilter("upcoming");
-            }
-          } else {
-            if (contentTabs[i].localName == "footer") {
-              contentTabs[i].style.display = "flex";
-            } else {
-              contentTabs[i].style.display = "none";
-              contentTabs[i].classList.remove("active");
-            }
-          }
-        }
-      });
-    }
-  }
-}
-
 function dayFilter(pending) {
   const todaySection = document.getElementById("todaySection");
   const overDueSection = document.getElementById("overDueSection");
   const upcomingSection = document.getElementById("upcomingSection");
-  let todayTasks = document.querySelectorAll(".today");
-  let overDueTasks = document.querySelectorAll(".overDue");
-  let upcomingTasks = document.querySelectorAll(".upcoming");
-  if (pending == "today") {
+  const todayTasks = document.querySelectorAll(".today");
+  const overDueTasks = document.querySelectorAll(".overDue");
+  const upcomingTasks = document.querySelectorAll(".upcoming");
+  if (pending === "today") {
     for (let index = 0; index < todayTasks.length; index++) {
       todaySection.insertBefore(todayTasks[index], todaySection.childNodes[0]);
     }
     for (let index = 0; index < overDueTasks.length; index++) {
       overDueSection.insertBefore(
         overDueTasks[index],
-        overDueSection.childNodes[0]
+        overDueSection.childNodes[0],
       );
     }
-  } else if (pending == "upcoming") {
+  } else if (pending === "upcoming") {
     for (let index = 0; index < upcomingTasks.length; index++) {
       upcomingSection.insertBefore(
         upcomingTasks[index],
-        upcomingSection.childNodes[0]
+        upcomingSection.childNodes[0],
       );
+    }
+  }
+}
+
+function sidePaneEventListener() {
+  const sidePaneTabs = document.getElementById("sidePane").childNodes;
+  const contentTabs = document.getElementById("content").childNodes;
+  for (let index = 1; index < sidePaneTabs.length; index++) {
+    if (
+      sidePaneTabs[index].id !== "createProject"
+      && sidePaneTabs[index].id !== "dashboard"
+      && sidePaneTabs[index].id !== "projects"
+    ) {
+      sidePaneTabs[index].addEventListener("click", (e) => {
+        sideTabChecker(e.target.id);
+        for (let i = 1; i < contentTabs.length; i++) {
+          if (contentTabs[i].id === `${sidePaneTabs[index].id}Tab`) {
+            contentTabs[i].style.display = "flex";
+            contentTabs[i].classList.add("active");
+            if (contentTabs[i].id === "todayTab") {
+              dayFilter("today");
+            } else if (contentTabs[i].id === "upcomingTab") {
+              dayFilter("upcoming");
+            }
+          } else if (contentTabs[i].localName === "footer") {
+            contentTabs[i].style.display = "flex";
+          } else {
+            contentTabs[i].style.display = "none";
+            contentTabs[i].classList.remove("active");
+          }
+        }
+      });
     }
   }
 }

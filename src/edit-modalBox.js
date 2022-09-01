@@ -1,4 +1,40 @@
-import { tasks, indexReturn, tabChecker, saveStorage } from "./task";
+/* eslint-disable quotes */
+/* eslint-disable no-param-reassign */
+/* eslint-disable import/no-cycle */
+import {
+  tasks, indexReturn, tabChecker, saveStorage,
+} from "./task";
+
+function editTaskInArray(array, index) {
+  document
+    .getElementById(`${index}`)
+    .classList.remove(`${array[index].project}`);
+  array[index].taskName = document.getElementById("editTaskNameBox").value;
+  array[index].description = document.getElementById("editDescriptionBox").value;
+  array[index].date = document.getElementById("editDateInput").value;
+  array[index].project = document.getElementById("editProject").value;
+  array[index].priority = document.getElementById("editPriority").value;
+  array[index].occurance = document.getElementById("editOccurance").value;
+  document.getElementById(`${index}`).classList.add(`${array[index].project}`);
+}
+
+function editInputFill(index) {
+  document.getElementById("editTaskNameBox").value = tasks[index].taskName;
+  document.getElementById("editDescriptionBox").value = tasks[index].description;
+  document.getElementById("editDateInput").value = tasks[index].date;
+  document.getElementById("editProject").value = tasks[index].project;
+  document.getElementById("editOccurance").value = tasks[index].occurance;
+  document.getElementById("editPriority").value = tasks[index].priority;
+}
+
+function editTaskInDom(index) {
+  const task = document.getElementById(`${index}`);
+  task.childNodes[1].childNodes[0].textContent = document.getElementById("editTaskNameBox").value;
+  task.childNodes[1].childNodes[1].textContent = document.getElementById("editDescriptionBox").value;
+  task.childNodes[1].childNodes[2].textContent = document.getElementById("editDateInput").value;
+  task.childNodes[2].childNodes[2].textContent = document.getElementById("editProject").value;
+  task.childNodes[2].childNodes[3].textContent = document.getElementById("editPriority").value;
+}
 
 function createEditTaskModalBox() {
   const content = document.querySelector("#content");
@@ -6,17 +42,17 @@ function createEditTaskModalBox() {
   modalBoxContainer.id = "editModalBoxContainer";
   const modalBox = document.createElement("div");
   modalBox.id = "editModalBox";
-  const form = document.createElement('form')
+  const form = document.createElement('form');
   const taskName = document.createElement("div");
   taskName.textContent = "Task Name";
   const taskNameBox = document.createElement("input");
   taskNameBox.setAttribute("type", "text");
   taskNameBox.setAttribute("id", "editTaskNameBox");
-  taskNameBox.setAttribute('required','')
-  taskNameBox.setAttribute('placeholder','Give a title to your task')
+  taskNameBox.setAttribute('required', '');
+  taskNameBox.setAttribute('placeholder', 'Give a title to your task');
   const description = document.createElement("div");
   description.textContent = "Description";
-  description.setAttribute('placeholder','optional')
+  description.setAttribute('placeholder', 'optional');
   const descriptionBox = document.createElement("textarea");
   descriptionBox.setAttribute("id", "editDescriptionBox");
   const optionsContainer = document.createElement("div");
@@ -25,8 +61,8 @@ function createEditTaskModalBox() {
   dateLabel.textContent = "Date";
   const dateInput = document.createElement("input");
   dateInput.setAttribute("type", "date");
-  dateInput.setAttribute('required','')
-  let today = new Date().toISOString().slice(0, 10);
+  dateInput.setAttribute('required', '');
+  const today = new Date().toISOString().slice(0, 10);
   dateInput.setAttribute("min", `${today}`);
   dateInput.id = "editDateInput";
   const projectLabel = document.createElement("label");
@@ -61,7 +97,7 @@ function createEditTaskModalBox() {
     occuranceOption2,
     occuranceOption3,
     occuranceOption4,
-    occuranceOption5
+    occuranceOption5,
   );
   const priorityLabel = document.createElement("label");
   priorityLabel.textContent = "Priority";
@@ -81,21 +117,20 @@ function createEditTaskModalBox() {
   ButtonContainer.classList.add("buttonContainer");
   const createButton = document.createElement("button");
   createButton.textContent = "Edit Task";
-  createButton.setAttribute('type','button')
+  createButton.setAttribute('type', 'button');
   createButton.addEventListener("click", () => {
     const todaySection = document.getElementById("todaySection");
     const overDueSection = document.getElementById("overDueSection");
     const upcomingSection = document.getElementById("upcomingSection");
     const projectTabs = document.getElementById("sidePane").childNodes;
     const taskTile = document.getElementById(`${indexReturn()}`);
-    if(form.checkValidity() == false){
-      form.reportValidity()
-    }
-    else{
+    if (form.checkValidity() === false) {
+      form.reportValidity();
+    } else {
       editTaskInDom(indexReturn());
       editTaskInArray(tasks, indexReturn());
       saveStorage();
-      let todayDate = new Date().toISOString().slice(0, 10);
+      const todayDate = new Date().toISOString().slice(0, 10);
       tabChecker(
         overDueSection,
         upcomingSection,
@@ -103,14 +138,14 @@ function createEditTaskModalBox() {
         taskTile,
         indexReturn(),
         todayDate,
-        projectTabs
+        projectTabs,
       );
       modalBoxContainer.style.display = "none";
     }
   });
   const cancelButton = document.createElement("button");
   cancelButton.textContent = "Cancel";
-  cancelButton.setAttribute('type','button')
+  cancelButton.setAttribute('type', 'button');
   cancelButton.addEventListener("click", () => {
     modalBoxContainer.style.display = "none";
   });
@@ -123,7 +158,7 @@ function createEditTaskModalBox() {
     occuranceLabel,
     occuranceInput,
     priorityLabel,
-    priorityInput
+    priorityInput,
   );
   form.append(
     taskName,
@@ -131,49 +166,11 @@ function createEditTaskModalBox() {
     description,
     descriptionBox,
     optionsContainer,
-    ButtonContainer
+    ButtonContainer,
   );
-  modalBox.append(form)
+  modalBox.append(form);
   modalBoxContainer.append(modalBox);
   content.append(modalBoxContainer);
-}
-
-function editTaskInArray(array, index) {
-  document
-    .getElementById(`${index}`)
-    .classList.remove(`${array[index].project}`);
-  array[index].taskName = document.getElementById("editTaskNameBox").value;
-  array[index].description =
-    document.getElementById("editDescriptionBox").value;
-  array[index].date = document.getElementById("editDateInput").value;
-  array[index].project = document.getElementById("editProject").value;
-  array[index].priority = document.getElementById("editPriority").value;
-  array[index].occurance = document.getElementById("editOccurance").value;
-  document.getElementById(`${index}`).classList.add(`${array[index].project}`);
-}
-
-function editInputFill(index) {
-  document.getElementById("editTaskNameBox").value = tasks[index].taskName;
-  document.getElementById("editDescriptionBox").value =
-    tasks[index].description;
-  document.getElementById("editDateInput").value = tasks[index].date;
-  document.getElementById("editProject").value = tasks[index].project;
-  document.getElementById("editOccurance").value = tasks[index].occurance;
-  document.getElementById("editPriority").value = tasks[index].priority;
-}
-
-function editTaskInDom(index) {
-  let task = document.getElementById(`${index}`);
-  task.childNodes[1].childNodes[0].textContent =
-    document.getElementById("editTaskNameBox").value;
-  task.childNodes[1].childNodes[1].textContent =
-    document.getElementById("editDescriptionBox").value;
-  task.childNodes[1].childNodes[2].textContent =
-    document.getElementById("editDateInput").value;
-  task.childNodes[2].childNodes[2].textContent =
-    document.getElementById("editProject").value;
-  task.childNodes[2].childNodes[3].textContent =
-    document.getElementById("editPriority").value;
 }
 
 export { createEditTaskModalBox, editInputFill };

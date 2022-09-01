@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 import "./style.css";
 import * as homeCreation from "./home-today-UI";
 import { upcomingTabCreation } from "./upcoming-UI";

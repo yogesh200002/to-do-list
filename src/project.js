@@ -1,53 +1,109 @@
-import { createTaskModalBox, tasks, updateIdInDOM } from "./task";
+/* eslint-disable no-plusplus */
+/* eslint-disable no-shadow */
+/* eslint-disable import/no-cycle */
+/* eslint-disable quotes */
+import { createTaskModalBox, tasks, updateIdInDOM, saveStorage } from "./task";
 import { sidePaneEventListener } from "./home-today-UI";
 import { createEditTaskModalBox } from "./edit-modalBox";
-import { saveStorage } from "./task";
 
 let tempProject;
 
-function createProjectModalBox() {
-  const content = document.getElementById("content");
-  const projectModalBoxContainer = document.createElement("div");
-  projectModalBoxContainer.id = "projectModalBoxContainer";
-  const projectModalBox = document.createElement("div");
-  projectModalBox.id = "projectModalBox";
-  const form = document.createElement('form')
-  const projectTitle = document.createElement("div");
-  projectTitle.textContent = "Create a new project";
-  const projectInput = document.createElement("input");
-  projectInput.id = "projectInput";
-  projectInput.setAttribute("type", "text");
-  projectInput.setAttribute('required','')
-  projectInput.setAttribute("placeholder", "Project Name");
-  const projectButtonContainer = document.createElement("div");
-  projectButtonContainer.id = "buttonContainer";
-  const createButton = document.createElement("button");
-  createButton.textContent = "Create";
-  createButton.id = "createProjectButton";
-  createButton.setAttribute('type','button')
-  createButton.addEventListener("click", () => {
-    if(form.checkValidity() == false){
-      form.reportValidity()
-    }
-    else{
-      addProjectInDOM(projectInput.value);
-      projectTab(projectInput.value);
-      projectModalBoxContainer.style.display = "none";
-      projectInput.value = "";
-    }
+function deleteProjectTasksInArray(tasks, projectName) {
+  tasks
+    .filter((task) => task.project === projectName)
+    .forEach((task) => tasks.splice(tasks.indexOf(task), 1));
+}
+
+function deleteProjectModalBox() {
+  const deleteProjectModalBoxContainer = document.createElement("div");
+  deleteProjectModalBoxContainer.id = "deleteProjectModalBoxContainer";
+  const deleteProjectModalBox = document.createElement("div");
+  deleteProjectModalBox.id = "deleteProjectModalBox";
+  const deleteProjectTitle = document.createElement("div");
+  deleteProjectTitle.textContent = `Are you sure you want to Delete ${tempProject} folder which also deletes all the tasks in it?`;
+  const deleteProjectYes = document.createElement("button");
+  deleteProjectYes.textContent = "Yes";
+  deleteProjectYes.addEventListener("click", () => {
+    const projectTasks = document.querySelectorAll(`.${tempProject}`);
+    deleteProjectTasksInArray(tasks, tempProject);
+    saveStorage();
+    projectTasks.forEach((task) => {
+      task.remove();
+      updateIdInDOM();
+    });
+    const projectTab = document.getElementById(`${tempProject}Tab`);
+    projectTab.remove();
+    const sidePaneProject = document.getElementById(`${tempProject}`);
+    sidePaneProject.remove();
+    const optionProject = document.querySelectorAll(
+      `option[value=${tempProject}]`,
+    );
+    optionProject.forEach((option) => {
+      option.remove();
+    });
+    deleteProjectModalBoxContainer.style.display = "none";
   });
-  const cancelButton = document.createElement("button");
-  cancelButton.textContent = "Cancel";
-  cancelButton.setAttribute('type','button')
-  cancelButton.addEventListener("click", () => {
-    projectModalBoxContainer.style.display = "none";
-    projectInput.value = "";
+  const deleteProjectNo = document.createElement("button");
+  deleteProjectNo.textContent = "No";
+  deleteProjectNo.addEventListener("click", () => {
+    deleteProjectModalBoxContainer.style.display = "none";
   });
-  projectButtonContainer.append(createButton, cancelButton);
-  form.append(projectTitle, projectInput, projectButtonContainer);
-  projectModalBox.append(form)
-  projectModalBoxContainer.append(projectModalBox);
-  content.append(projectModalBoxContainer);
+  deleteProjectModalBox.append(
+    deleteProjectTitle,
+    deleteProjectYes,
+    deleteProjectNo,
+  );
+  deleteProjectModalBoxContainer.append(deleteProjectModalBox);
+  document.getElementById("content").append(deleteProjectModalBoxContainer);
+}
+
+function projectTabTasks(projectName) {
+  const projectSection = document.getElementById(`${projectName}Section`);
+  const tasksInProject = document.getElementsByClassName(`${projectName}`);
+  for (let i = 0; i < tasksInProject.length; i++) {
+    projectSection.insertBefore(tasksInProject[i], projectSection.firstChild);
+  }
+}
+
+function sideTabChecker(tab) {
+  const sidePaneTabs = document.getElementById("sidePane").childNodes;
+  for (let index = 0; index < sidePaneTabs.length; index++) {
+    if (sidePaneTabs[index].id === tab) {
+      sidePaneTabs[index].style.backgroundColor = "#95ED8D";
+    } else if (
+      sidePaneTabs[index].id === "createProject"
+        || sidePaneTabs[index].id === "dashboard"
+        || sidePaneTabs[index].id === "projects"
+    ) {
+      sidePaneTabs[index].style.backgroundColor = "white";
+    } else {
+      sidePaneTabs[index].style.backgroundColor = "#D9D9D9";
+    }
+  }
+}
+
+function projectEventListener() {
+  const projectList = document.getElementById("sidePane").childNodes;
+  const contentChild = document.getElementById("content").childNodes;
+  for (let index = 4; index < projectList.length - 1; index++) {
+    projectList[index].addEventListener("click", (e) => {
+      sideTabChecker(e.target.id);
+      for (let i = 1; i < contentChild.length; i++) {
+        if (contentChild[i].id === `${projectList[index].id}Tab`) {
+          contentChild[i].style.display = "flex";
+          projectTabTasks(projectList[index].id);
+        } else {
+          contentChild[i].style.display = "none";
+        }
+      }
+      const projectTasks = tasks.filter(
+        (task) => task.project === projectList[index].id,
+      );
+      projectTasks.forEach((task) => {
+        projectTabTasks(task.project);
+      });
+    });
+  }
 }
 
 function addProjectInDOM(projectName) {
@@ -70,7 +126,7 @@ function addProjectInDOM(projectName) {
   projectIcon.textContent = "folder";
   const projectTitle = document.createElement("div");
   projectTitle.textContent = `${projectName}`;
-  if (projectName == "inbox") {
+  if (projectName === "inbox") {
     projectConatiner.append(projectIcon, projectTitle);
   } else {
     const projectDelete = document.createElement("span");
@@ -82,11 +138,11 @@ function addProjectInDOM(projectName) {
       if (document.getElementById("deleteProjectModalBoxContainer") == null) {
         deleteProjectModalBox();
         document.getElementById(
-          "deleteProjectModalBoxContainer"
+          "deleteProjectModalBoxContainer",
         ).style.display = "block";
       } else {
         document.getElementById(
-          "deleteProjectModalBoxContainer"
+          "deleteProjectModalBoxContainer",
         ).style.display = "block";
       }
     });
@@ -141,7 +197,7 @@ function projectTab(projectName) {
     }
   });
   window.addEventListener("click", (e) => {
-    if (e.target == document.getElementById("modalBoxContainer")) {
+    if (e.target === document.getElementById("modalBoxContainer")) {
       document.getElementById("modalBoxContainer").style.display = "none";
     }
   });
@@ -150,104 +206,48 @@ function projectTab(projectName) {
   projectEventListener();
 }
 
-function projectTabTasks(projectName) {
-  const projectSection = document.getElementById(`${projectName}Section`);
-  const tasksInProject = document.getElementsByClassName(`${projectName}`);
-  for (let i = 0; i < tasksInProject.length; i++) {
-    projectSection.insertBefore(tasksInProject[i], projectSection.firstChild);
-  }
-}
-
-function projectEventListener() {
-  const projectList = document.getElementById("sidePane").childNodes;
-  const contentChild = document.getElementById("content").childNodes;
-  for (let index = 4; index < projectList.length - 1; index++) {
-    projectList[index].addEventListener("click", (e) => {
-      sideTabChecker(e.target.id);
-      for (let i = 1; i < contentChild.length; i++) {
-        if (contentChild[i].id == `${projectList[index].id}Tab`) {
-          contentChild[i].style.display = "flex";
-          projectTabTasks(projectList[index].id);
-        } else {
-          contentChild[i].style.display = "none";
-        }
-      }
-      let projectTasks = tasks.filter(
-        (task) => task.project == projectList[index].id
-      );
-      projectTasks.forEach((task) => {
-        projectTabTasks(task.project);
-      });
-    });
-  }
-}
-
-function sideTabChecker(tab) {
-  const sidePaneTabs = document.getElementById("sidePane").childNodes;
-  for (let index = 0; index < sidePaneTabs.length; index++) {
-    if (sidePaneTabs[index].id == tab) {
-      sidePaneTabs[index].style.backgroundColor = "#95ED8D";
+function createProjectModalBox() {
+  const content = document.getElementById("content");
+  const projectModalBoxContainer = document.createElement("div");
+  projectModalBoxContainer.id = "projectModalBoxContainer";
+  const projectModalBox = document.createElement("div");
+  projectModalBox.id = "projectModalBox";
+  const form = document.createElement('form');
+  const projectTitle = document.createElement("div");
+  projectTitle.textContent = "Create a new project";
+  const projectInput = document.createElement("input");
+  projectInput.id = "projectInput";
+  projectInput.setAttribute("type", "text");
+  projectInput.setAttribute('required', '');
+  projectInput.setAttribute("placeholder", "Project Name");
+  const projectButtonContainer = document.createElement("div");
+  projectButtonContainer.id = "buttonContainer";
+  const createButton = document.createElement("button");
+  createButton.textContent = "Create";
+  createButton.id = "createProjectButton";
+  createButton.setAttribute('type', 'button');
+  createButton.addEventListener("click", () => {
+    if (form.checkValidity() === false) {
+      form.reportValidity();
     } else {
-      if (
-        sidePaneTabs[index].id == "createProject" ||
-        sidePaneTabs[index].id == "dashboard" ||
-        sidePaneTabs[index].id == "projects"
-      ) {
-        sidePaneTabs[index].style.backgroundColor = "white";
-      } else {
-        sidePaneTabs[index].style.backgroundColor = "#D9D9D9";
-      }
+      addProjectInDOM(projectInput.value);
+      projectTab(projectInput.value);
+      projectModalBoxContainer.style.display = "none";
+      projectInput.value = "";
     }
-  }
-}
-
-function deleteProjectTasksInArray(tasks, projectName) {
-  tasks
-    .filter((task) => task.project == projectName)
-    .forEach((task) => tasks.splice(tasks.indexOf(task), 1));
-}
-
-function deleteProjectModalBox() {
-  const deleteProjectModalBoxContainer = document.createElement("div");
-  deleteProjectModalBoxContainer.id = "deleteProjectModalBoxContainer";
-  const deleteProjectModalBox = document.createElement("div");
-  deleteProjectModalBox.id = "deleteProjectModalBox";
-  const deleteProjectTitle = document.createElement("div");
-  deleteProjectTitle.textContent = `Are you sure you want to Delete ${tempProject} folder which also deletes all the tasks in it?`;
-  const deleteProjectYes = document.createElement("button");
-  deleteProjectYes.textContent = "Yes";
-  deleteProjectYes.addEventListener("click", () => {
-    const projectTasks = document.querySelectorAll(`.${tempProject}`);
-    deleteProjectTasksInArray(tasks, tempProject);
-    saveStorage();
-    projectTasks.forEach((task) => {
-      task.remove();
-      updateIdInDOM();
-    });
-    const projectTab = document.getElementById(`${tempProject}Tab`);
-    projectTab.remove();
-    const sidePaneProject = document.getElementById(`${tempProject}`);
-    sidePaneProject.remove();
-    const optionProject = document.querySelectorAll(
-      `option[value=${tempProject}]`
-    );
-    optionProject.forEach((option) => {
-      option.remove();
-    });
-    deleteProjectModalBoxContainer.style.display = "none";
   });
-  const deleteProjectNo = document.createElement("button");
-  deleteProjectNo.textContent = "No";
-  deleteProjectNo.addEventListener("click", () => {
-    deleteProjectModalBoxContainer.style.display = "none";
+  const cancelButton = document.createElement("button");
+  cancelButton.textContent = "Cancel";
+  cancelButton.setAttribute('type', 'button');
+  cancelButton.addEventListener("click", () => {
+    projectModalBoxContainer.style.display = "none";
+    projectInput.value = "";
   });
-  deleteProjectModalBox.append(
-    deleteProjectTitle,
-    deleteProjectYes,
-    deleteProjectNo
-  );
-  deleteProjectModalBoxContainer.append(deleteProjectModalBox);
-  document.getElementById("content").append(deleteProjectModalBoxContainer);
+  projectButtonContainer.append(createButton, cancelButton);
+  form.append(projectTitle, projectInput, projectButtonContainer);
+  projectModalBox.append(form);
+  projectModalBoxContainer.append(projectModalBox);
+  content.append(projectModalBoxContainer);
 }
 
 export {
