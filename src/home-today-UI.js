@@ -85,9 +85,6 @@ function todayTabCreation() {
   todayTabHeader.id = "todayTabHeader";
   const todayTabHeading = document.createElement("h1");
   todayTabHeading.textContent = "Today";
-  const profileIcon = document.createElement("span");
-  profileIcon.setAttribute("class", "material-symbols-outlined");
-  profileIcon.textContent = "account_circle";
   const dateDisplay = document.createElement("div");
   const date = Intl.DateTimeFormat(navigator.language, {
     weekday: "long",
@@ -104,7 +101,7 @@ function todayTabCreation() {
   const overDueSection = document.createElement("div");
   overDueSection.id = "overDueSection";
   overDueContainer.append(overDue, overDueSection);
-  todayTabHeader.append(todayTabHeading, profileIcon);
+  todayTabHeader.append(todayTabHeading);
   const todaySectionTab = document.createElement("div");
   todaySectionTab.id = "todaySectionTab";
   const todaySectionTabHeader = document.createElement("div");
@@ -176,7 +173,7 @@ function sidePaneEventListener() {
       && sidePaneTabs[index].id !== "projects"
     ) {
       sidePaneTabs[index].addEventListener("click", (e) => {
-        sideTabChecker(e.target.id);
+        sideTabChecker(e.target);
         for (let i = 1; i < contentTabs.length; i++) {
           if (contentTabs[i].id === `${sidePaneTabs[index].id}Tab`) {
             contentTabs[i].style.display = "flex";
@@ -198,17 +195,9 @@ function sidePaneEventListener() {
   }
 }
 
-function footerCreation() {
-  const content = document.querySelector("#content");
-  const footer = document.createElement("footer");
-  footer.textContent = "Made with Love by Yogesh :)";
-  content.append(footer);
-}
-
 export {
   mainCreation,
   sidePaneCreation,
-  footerCreation,
   todayTabCreation,
   sidePaneEventListener,
 };
