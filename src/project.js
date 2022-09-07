@@ -70,7 +70,7 @@ function projectTabTasks(projectName) {
 function sideTabChecker(tab) {
   const sidePaneTabs = document.getElementById("sidePane").childNodes;
   for (let index = 0; index < sidePaneTabs.length; index++) {
-    if (sidePaneTabs[index].id === tab) {
+    if (sidePaneTabs[index] === tab || sidePaneTabs[index] === tab.parentElement) {
       sidePaneTabs[index].style.backgroundColor = "#95ED8D";
     } else if (
       sidePaneTabs[index].id === "createProject"
@@ -89,7 +89,7 @@ function projectEventListener() {
   const contentChild = document.getElementById("content").childNodes;
   for (let index = 4; index < projectList.length - 1; index++) {
     projectList[index].addEventListener("click", (e) => {
-      sideTabChecker(e.target.id);
+      sideTabChecker(e.target);
       for (let i = 1; i < contentChild.length; i++) {
         if (contentChild[i].id === `${projectList[index].id}Tab`) {
           contentChild[i].style.display = "flex";
@@ -177,15 +177,12 @@ function projectTab(projectName) {
   projectTabHeading.textContent = `${
     projectName.charAt(0).toUpperCase() + projectName.slice(1)
   }`;
-  const profileIcon = document.createElement("span");
-  profileIcon.setAttribute("class", "material-symbols-outlined");
-  profileIcon.textContent = "account_circle";
   const projectContainer = document.createElement("div");
   projectContainer.id = `${projectName}Container`;
   const projectSection = document.createElement("div");
   projectSection.id = `${projectName}Section`;
   projectContainer.append(projectSection);
-  projectTabHeader.append(projectTabHeading, profileIcon);
+  projectTabHeader.append(projectTabHeading);
   const addTaskbtn = document.createElement("button");
   addTaskbtn.id = "addTaskbtn";
   addTaskbtn.textContent = "Add Task";
