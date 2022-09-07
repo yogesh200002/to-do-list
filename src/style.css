@@ -43,7 +43,7 @@ html, body {
 
 #sidePane{
     flex-direction: column;
-    background-color: #D9D9D9;
+    background-color: white;
     border-right: 2px solid black;
     min-width: 300px;
 }
@@ -145,11 +145,22 @@ input[type="checkbox"]{
 
 @media only screen and (max-width: 900px) {
     #content{
-        flex-direction: column;
+        flex-direction: column-reverse;
     }
     #sidePane{
         flex-direction: row;
         overflow: scroll;
+        border-right: none;
+    }
+    #sidePane > div{
+        flex-direction: column;
+        height: 50px;
+        font-size: small;
+        border-radius: 14px;
+    }
+    #sidePane > div > div{
+        text-overflow: ellipsis;
+        white-space: nowrap
     }
     .taskSection{
         width: fit-content;
