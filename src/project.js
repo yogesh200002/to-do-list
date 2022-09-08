@@ -212,6 +212,9 @@ function createProjectModalBox() {
   const projectModalBox = document.createElement("div");
   projectModalBox.id = "projectModalBox";
   const form = document.createElement('form');
+  form.style.display = 'flex';
+  form.style.flexDirection = 'column';
+  form.style.alignItems = 'center';
   const projectTitle = document.createElement("div");
   projectTitle.textContent = "Create a new project";
   const projectInput = document.createElement("input");
@@ -220,7 +223,7 @@ function createProjectModalBox() {
   projectInput.setAttribute('required', '');
   projectInput.setAttribute("placeholder", "Project Name");
   const projectButtonContainer = document.createElement("div");
-  projectButtonContainer.id = "buttonContainer";
+  projectButtonContainer.classList.add("buttonContainer");
   const createButton = document.createElement("button");
   createButton.textContent = "Create";
   createButton.id = "createProjectButton";
