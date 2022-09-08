@@ -26,6 +26,7 @@ function sidePaneCreation() {
   dashboardContainer.append(dashboardIcon, dashboard);
   const todayContainer = document.createElement("div");
   todayContainer.id = "today";
+  todayContainer.style.backgroundColor = '#D9D9D9';
   const today = document.createElement("div");
   today.textContent = "Today";
   const todayIcon = document.createElement("span");
@@ -35,6 +36,7 @@ function sidePaneCreation() {
   todayContainer.append(todayIcon, today);
   const upcomingContainer = document.createElement("div");
   upcomingContainer.id = "upcoming";
+  upcomingContainer.style.backgroundColor = '#D9D9D9';
   const upcoming = document.createElement("div");
   upcoming.textContent = "Upcoming";
   const upcomingIcon = document.createElement("span");
@@ -51,6 +53,7 @@ function sidePaneCreation() {
   projectsContainer.append(projectsIcon, projects);
   const inboxContainer = document.createElement("div");
   inboxContainer.id = "inbox";
+  inboxContainer.style.backgroundColor = '#D9D9D9';
   const inbox = document.createElement("div");
   inbox.textContent = "Inbox";
   const inboxIcon = document.createElement("span");
